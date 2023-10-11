@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     void setUrok() {
         urokF = urok.getValue();
-        textViewUrok.setText("Urok: " + (float)urokF);
+        textViewUrok.setText("Úrok: " + (float)urokF);
     }
 
     void setObdobi() {
@@ -150,5 +152,12 @@ public class MainActivity extends AppCompatActivity {
         data.setDrawValues(false);
         chart.setData(data);
         chart.invalidate();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
 }
