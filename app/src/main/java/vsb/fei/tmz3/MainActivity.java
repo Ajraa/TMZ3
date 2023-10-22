@@ -1,12 +1,16 @@
 package vsb.fei.tmz3;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -27,6 +31,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    int sliderRequest = 0;
+    int historyRequest = 1;
+    int chartRequest = 2;
     BarChart chart;
     Slider vklad;
     TextView textViewVklad;
@@ -160,4 +167,92 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.chartTypeMenu) {
+
+        }
+
+        if(id == R.id.historyMenu) {
+
+        }
+
+        if(id == R.id.sliderValuesMenu) {
+            this.sliderActivity();
+        }
+        return true;
+    }
+
+    public void changeChart() {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == this.sliderRequest && resultCode == RESULT_OK) {
+            this.processSliderRequest(data);
+        }
+
+        if(requestCode == this.historyRequest && resultCode == RESULT_OK) {
+
+        }
+
+        if(requestCode == this.chartRequest && resultCode == RESULT_OK) {
+
+        }
+    }
+
+    public void sliderActivity() {
+        Intent intent = new Intent(this, SliderValuesActivity.class);
+        intent.putExtra("urokMin", this.urok.getValueFrom());
+        intent.putExtra("urokMax", this.urok.getValueTo());
+        intent.putExtra("vkladMin", this.vklad.getValueFrom());
+        intent.putExtra("vkladMax", this.vklad.getValueTo());
+        intent.putExtra("obdobiMin", this.obdobi.getValueFrom());
+        intent.putExtra("obdobiMax", this.obdobi.getValueTo());
+        startActivityForResult(intent, this.sliderRequest);
+    }
+
+    public void chartActivity() {
+        Intent intent = new Intent(this, ChartTypeActivity.class);
+        startActivityForResult(intent, this.chartRequest);
+    }
+
+    public void historyActivity() {
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
+    }
+
+    public void processSliderRequest(Intent data) {
+        float urokMin = data.getFloatExtra("urokMin", 0);
+        float urokMax = data.getFloatExtra("urokMax", 0);
+        urok.setValue(urokMin);
+        urok.setValueFrom(urokMin);
+        urok.setValueTo(urokMax);
+
+        float vkladMin = data.getFloatExtra("vkladMin", 0);
+        float vkladMax = data.getFloatExtra("vkladMax", 0);
+        vklad.setValue(vkladMin);
+        vklad.setValueFrom(vkladMin);
+        vklad.setValueTo(vkladMax);
+
+        float minObdobi = data.getFloatExtra("obdobiMin", 0);
+        float maxObdobi = data.getFloatExtra("obdobiMax", 0);
+        obdobi.setValue(minObdobi);
+        obdobi.setValueFrom(minObdobi);
+        obdobi.setValueTo(maxObdobi);
+    }
 }
+
+
+
+
+
+
+
+
+

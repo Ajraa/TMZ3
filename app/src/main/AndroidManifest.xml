@@ -13,6 +13,15 @@
         android:theme="@style/Theme.TMZ3"
         tools:targetApi="31">
         <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SliderValuesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChartTypeActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

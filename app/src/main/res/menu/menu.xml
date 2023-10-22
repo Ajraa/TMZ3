@@ -2,7 +2,13 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Item" />
-    <item android:title="Item" />
-    <item android:title="Item" />
+    <item
+        android:id="@+id/chartTypeMenu"
+        android:title="Chart type" />
+    <item
+        android:id="@+id/historyMenu"
+        android:title="History" />
+    <item
+        android:id="@+id/sliderValuesMenu"
+        android:title="Slider values" />
 </menu>
