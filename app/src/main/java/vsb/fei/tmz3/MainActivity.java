@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             setChart();
             setHeader();
         });
+        this.load();
     }
 
     void calculateSum() {
@@ -276,13 +278,17 @@ public class MainActivity extends AppCompatActivity {
         if ( keys.size() == 0 )
             return;
 
-        String s = keys.values().toArray()[keys.values().size()].toString();
+        String s = keys.values().toArray()[keys.values().size()-1].toString();
         FinanceData data = gson.fromJson(s, FinanceData.class);
+        Log.w("Data suma", String.valueOf(data.getSuma()));
         this.sumaF = data.getSuma();
         this.vkladF = data.getVklad();
         this.obdobiF = data.getObdobi();
-        this.urokF = data.getObdobi();
-        this.calculateSum();
+        this.urokF = data.getUrok();
+        //this.calculateSum();
+        this.vklad.setValue((float) this.vkladF);
+        this.obdobi.setValue((float) this.obdobiF);
+        this.urok.setValue((float) this.urokF);
         this.setVklad();
         this.setObdobi();
         this.setUrok();
