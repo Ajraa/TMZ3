@@ -4,13 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -24,13 +27,17 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.slider.Slider;
+import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button saveButton;
     int sliderRequest = 0;
     int historyRequest = 1;
     int chartRequest = 2;
@@ -52,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.saveButton = (Button) findViewById(R.id.saveButton);
+        this.saveButton.setOnClickListener(v -> this.save());
 
         chart = (BarChart) findViewById(R.id.chart);
 
@@ -176,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(id == R.id.historyMenu) {
-
+            this.historyActivity();
         }
 
         if(id == R.id.sliderValuesMenu) {
@@ -198,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(requestCode == this.historyRequest && resultCode == RESULT_OK) {
-
+            return;
         }
 
         if(requestCode == this.chartRequest && resultCode == RESULT_OK) {
@@ -245,6 +255,39 @@ public class MainActivity extends AppCompatActivity {
         obdobi.setValue(minObdobi);
         obdobi.setValueFrom(minObdobi);
         obdobi.setValueTo(maxObdobi);
+    }
+
+    public void save() {
+        FinanceData data = new FinanceData(this.sumaF, this.vkladF, this.urokF, this.obdobiF);
+        SharedPreferences sharedPreferences = getSharedPreferences("TAMZ3", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        Date date = new Date();
+        String json = gson.toJson(data);
+        editor.putString(date.toString(), json);
+        editor.commit();
+    }
+
+    public void load() {
+        SharedPreferences sharedPreferences = getSharedPreferences("TAMZ3", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        Map<String, ?> keys = sharedPreferences.getAll();
+        if ( keys.size() == 0 )
+            return;
+
+        String s = keys.values().toArray()[keys.values().size()].toString();
+        FinanceData data = gson.fromJson(s, FinanceData.class);
+        this.sumaF = data.getSuma();
+        this.vkladF = data.getVklad();
+        this.obdobiF = data.getObdobi();
+        this.urokF = data.getObdobi();
+        this.calculateSum();
+        this.setVklad();
+        this.setObdobi();
+        this.setUrok();
+        this.setHeader();
+        this.setChart();
     }
 }
 
